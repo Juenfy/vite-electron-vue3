@@ -1,0 +1,56 @@
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+@import 'flowbite/src/themes/default';
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+
+.green-btn {
+  @apply text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-sm text-sm px-8 py-2 text-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
+}
+
+.red-btn {
+  @apply text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-sm text-sm px-8 py-2 text-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
+}
+
+.svg-btn-hover {
+  @apply flex items-center justify-center dark:text-white w-[2.5rem] h-[2.5rem] hover:rounded-full hover:bg-gray-600 dark:hover:bg-gray-700;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* 全局滚动条样式 - 隐藏轨道，只显示滑块 */
+::-webkit-scrollbar {
+  width: 6px; /* 垂直滚动条宽度 */
+  height: 6px; /* 水平滚动条高度 */
+}
+
+/* 滚动条轨道 - 完全透明（隐藏） */
+::-webkit-scrollbar-track {
+  background: transparent; /* 轨道透明 */
+  border: none;
+}
+
+/* 滚动条轨道的内边缘（部分浏览器会显示） */
+::-webkit-scrollbar-track-piece {
+  background: transparent;
+  border: none;
+}
+
+/* 滚动条滑块 - 半透明样式 */
+::-webkit-scrollbar-thumb {
+  background: rgba(150, 150, 150, 0.5); /* 半透明灰色滑块 */
+  border-radius: 3px; /* 圆角 */
+  transition: background 0.3s;
+}
+
+/* 滑块悬停效果 */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 100, 100, 0.7); /* 悬停时加深颜色 */
+}
+
+/* 滑块激活状态 */
+::-webkit-scrollbar-thumb:active {
+  background: rgba(80, 80, 80, 0.8);
+}
