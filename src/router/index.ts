@@ -5,15 +5,29 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('../views/Home.vue'),
-      meta: { title: '首页' },
+      name: 'layout',
+      component: () => import('../Layout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'home',
+          component: () => import('../views/Home.vue'),
+          meta: { title: '首页' },
+        },
+      ],
     },
     {
-      path: '/test',
-      name: 'test',
-      component: () => import('../views/Test.vue'),
-      meta: { title: '测试' },
+      path: '/window/',
+      name: 'window',
+      component: () => import('../Window.vue'),
+      children: [
+        {
+          path: 'test',
+          name: 'win-test',
+          component: () => import('../views/Test.vue'),
+          meta: { title: '测试' },
+        },
+      ],
     },
   ],
 })

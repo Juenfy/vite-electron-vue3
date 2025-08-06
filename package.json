@@ -10,13 +10,14 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "axios": "^1.10.0",
+    "electron-store": "^10.1.0",
+    "flowbite": "^3.1.2",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.4.1",
     "tailwindcss": "^4.1.11",
     "vue": "^3.4.21",
-    "vue-router": "^4.5.1",
-    "flowbite": "^3.1.2",
-    "axios": "^1.10.0"
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
@@ -38,6 +39,20 @@
       "electron/icons/**/*",
       "dist/**/*"
     ],
+    "appId": "com.example.vueelectron",
+    "productName": "Vue-Electron 应用",
+    "asar": true,
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "electron/icons/logo_256x256.ico",
+      "uninstallerIcon": "electron/icons/logo_256x256.ico",
+      "installerHeaderIcon": "electron/icons/logo_256x256.ico"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "electron/icons/logo_256x256.ico"
+    },
     "icon": "electron/icons/logo_256x256.png"
   }
 }

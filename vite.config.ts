@@ -30,11 +30,13 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: [
-      {
-        find: /\@\//,
-        replacement: path.join(__dirname, 'src/'),
-      },
-    ],
+    alias: {
+      '@': path.join(__dirname, 'src'),
+    },
+  },
+  base: process.env.NODE_ENV === 'production' ? './' : '/',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
   },
 })

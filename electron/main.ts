@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, nativeImage, Tray, Menu } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-
+import url from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // The built directory structure
@@ -19,7 +19,7 @@ process.env.APP_ROOT = path.join(__dirname, '..')
 export const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
 export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
 export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
-export const ICONS_DIR = path.join(process.env.APP_ROOT, 'electron/icons/')
+export const ICONS_DIR = path.join(process.env.APP_ROOT, 'electron', 'icons')
 
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
   ? path.join(process.env.APP_ROOT, 'public')
@@ -35,18 +35,28 @@ let isMoving: boolean = false,
 
 type WindowConfig = {
   name: string
-  url?: string
+  uri?: string
   options?: any
 }
 
 function createWindow(data: WindowConfig) {
-  const { name, url, options } = data as WindowConfig
+  const { name, uri, options } = data as WindowConfig
 
   if (wins.has(name)) {
-    if (url && url !== wins.get(name)?.webContents.getURL()) {
-      console.log('reload', url)
-      wins.get(name)?.loadURL(url)
+    console.log('window exists', wins.get(name)?.webContents.getURL())
+    if (uri && wins.get(name)?.webContents.getURL().indexOf(uri) === -1) {
+      uri.indexOf('http') !== -1
+        ? wins.get(name)?.loadURL(uri)
+        : wins.get(name)?.loadURL(
+            url.format({
+              pathname: path.join(RENDERER_DIST, 'index.html'),
+              protocol: 'file:',
+              slashes: true,
+              hash: uri.replace('#', ''), // 单独处理哈希部分
+            })
+          )
     }
+    if (wins.get(name)?.isMinimized()) wins.get(name)?.restore()
     wins.get(name)?.focus()
     return wins.get(name)
   }
@@ -68,19 +78,22 @@ function createWindow(data: WindowConfig) {
   })
 
   // console.log('electron-env', process.env)
-  if (url) {
-    win.loadURL(url)
-    wins.set(name, win)
-    return
-  }
 
   if (VITE_DEV_SERVER_URL) {
-    win.loadURL(VITE_DEV_SERVER_URL)
-    win.webContents.openDevTools()
+    uri ? win.loadURL(uri) : win.loadURL(VITE_DEV_SERVER_URL)
   } else {
-    win.loadFile(path.join(RENDERER_DIST, 'index.html'))
+    uri
+      ? win.loadURL(
+          url.format({
+            pathname: path.join(RENDERER_DIST, 'index.html'),
+            protocol: 'file:',
+            slashes: true,
+            hash: uri.replace('#', ''), // 单独处理哈希部分
+          })
+        )
+      : win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
-
+  win.webContents.openDevTools()
   wins.set(name, win)
 }
 
@@ -181,12 +194,13 @@ type WindowActionData = {
     | 'minimize'
     | 'maximize'
     | 'unmaximize'
+    | 'focus'
     | 'exit'
     | 'create'
     | 'mousedown'
     | 'mousemove'
     | 'mouseup'
-  url?: string
+  uri?: string
   hide?: boolean
   deltaX?: number
   deltaY?: number
@@ -197,8 +211,9 @@ type WindowActionData = {
 ipcMain.on(
   'window-action',
   (event: Electron.IpcMainEvent, data: WindowActionData) => {
-    console.log('window-action', event)
-    const { name, action, url, hide, deltaX, deltaY, options } = data
+    // console.log('window-action', event)
+    data.name = data.name.replace('win-', '')
+    const { name, action, uri, hide, deltaX, deltaY, options } = data
     switch (action) {
       case 'mousedown':
         // 记录初始位置
@@ -227,6 +242,10 @@ ipcMain.on(
       case 'unmaximize':
         wins.get(name)?.unmaximize()
         break
+      case 'focus':
+        if (wins.get(name)?.isMinimized()) wins.get(name)?.restore()
+        wins.get(name)?.focus()
+        break
       case 'exit':
         if (wins.has(name)) {
           // 主窗口的话就所有窗口都关闭或隐藏
@@ -250,10 +269,10 @@ ipcMain.on(
         }
         break
       case 'create':
-        if (url) {
+        if (uri) {
           createWindow({
             name,
-            url,
+            uri,
             options: options || {},
           })
         }
