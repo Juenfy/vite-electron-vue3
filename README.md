@@ -36,3 +36,9 @@ npm install
 ```bash
 npm run dev
 ```
+
+4. 打包项目
+
+```bash
+npm run build
+```
