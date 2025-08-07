@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && electron-builder",
+    "build:win": "vite build && electron-builder --win",
+    "build:mac": "vite build && electron-builder --mac",
+    "build:linux": "vite build && electron-builder --linux",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -49,9 +52,18 @@
       "uninstallerIcon": "electron/icons/logo_256x256.ico",
       "installerHeaderIcon": "electron/icons/logo_256x256.ico"
     },
+    "mac": {
+      "target": "dmg"
+    },
     "win": {
       "target": "nsis",
       "icon": "electron/icons/logo_256x256.ico"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm"
+      ]
     },
     "icon": "electron/icons/logo_256x256.png"
   }
