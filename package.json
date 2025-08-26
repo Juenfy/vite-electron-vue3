@@ -3,6 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "author": {
+    "name": "Juenfy",
+    "email": "juenfy@gmail.com"
+  },
+  "description": "Vite + Electron + Vue3",
   "scripts": {
     "dev": "vite",
     "build": "vite build && electron-builder",
@@ -35,36 +40,5 @@
     "vite-plugin-electron": "^0.28.6",
     "vite-plugin-electron-renderer": "^0.14.5"
   },
-  "main": "dist-electron/main.js",
-  "build": {
-    "files": [
-      "dist-electron/**/*",
-      "electron/icons/**/*",
-      "dist/**/*"
-    ],
-    "appId": "com.example.vueelectron",
-    "productName": "Vue-Electron 应用",
-    "asar": true,
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "installerIcon": "electron/icons/logo_256x256.ico",
-      "uninstallerIcon": "electron/icons/logo_256x256.ico",
-      "installerHeaderIcon": "electron/icons/logo_256x256.ico"
-    },
-    "mac": {
-      "target": "dmg"
-    },
-    "win": {
-      "target": "nsis",
-      "icon": "electron/icons/logo_256x256.ico"
-    },
-    "linux": {
-      "target": [
-        "deb",
-        "rpm"
-      ]
-    },
-    "icon": "electron/icons/logo_256x256.png"
-  }
+  "main": "dist-electron/main.js"
 }
